@@ -1,0 +1,21 @@
+﻿@model Blog.Models.PostViewModel
+
+<div id="post-@Model.Id" class="post panel panel-info">
+    <div class="panel-heading">
+        @Model.Title
+    </div>
+
+    <div class="post-body panel-body">
+        <div class="post-content">@Model.Content</div>
+        @if (Model.Description != null)
+        {
+            <div class="post-description well well-sm">@Model.Description</div>
+        }
+    </div>
+    <div class="panel-footer">
+        Posted on: @Model.PostedOn.ToShortDateString()
+        <span class="pull-right">
+            by <i>@Html.ActionLink(@Model.AuthorDisplayName, "Show", "Users", new {name = Model.Author.DisplayName}, new {HtmlAttributes = new {id = Model.Author.DisplayName}})</i>
+        </span>
+    </div>
+</div>

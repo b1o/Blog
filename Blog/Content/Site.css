@@ -11,14 +11,27 @@
 
 /* Override the default bootstrap behavior where horizontal description lists 
    will truncate terms that are too long to fit in the left column 
-*/
+
 .dl-horizontal dt {
-    white-space: normal;
+    white-space: pre;
+}
+*/
+/* Set width on the form input elements since they're 100% wide by default */
+
+.post-content, .post-description{
+    white-space: pre-wrap;
 }
 
-/* Set width on the form input elements since they're 100% wide by default */
+.well {
+    margin-top: 10px;
+    margin-bottom: 0;
+}
+
 input,
-select,
 textarea {
     max-width: 280px;
+}
+
+#posts-container {
+    width: 500px;
 }

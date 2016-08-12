@@ -1,0 +1,19 @@
+﻿@model IEnumerable<Blog.Models.PostViewModel>
+
+@{
+    ViewBag.Title = "Dashboard";
+}
+
+<div id="posts-container" class="container-fluid center-block">
+    <div class="panel-group">
+        @if (Model.Any())
+        {
+            @Html.DisplayFor(x => x);
+        }
+        else
+        {
+            <div class="col-md-4 col-sm-6 col-xs-12">No Posts</div>
+        }
+    </div>
+
+</div>

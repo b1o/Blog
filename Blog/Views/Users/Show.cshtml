@@ -1,0 +1,13 @@
+﻿@model Blog.Models.UserViewModel
+
+@{
+    ViewBag.Title = "Show";
+}
+
+<ul class="list-group">
+    <li><img class="img-circle" src=@Url.Action("GetUserProfileImage", "Users", new { id = Model.Id}) height="48" width="48"/></li>
+    <li class="list-group-item">Name: @Model.Name</li>
+    <li class="list-group-item">Posts: @Model.Posts.Count</li>
+    <li class="list-group-item">Followers: @Model.Followers.Count</li>
+</ul>
+

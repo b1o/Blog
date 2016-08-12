@@ -1,0 +1,15 @@
+﻿@model IEnumerable<Blog.Models.PostViewModel>
+
+@{
+    ViewBag.Title = "My";
+}
+
+<h2>My Posts</h2>
+
+<div class="row">
+    @if (Model.Any())
+    {
+        @Html.DisplayFor(x => x)
+    }
+</div>
+
