@@ -1,0 +1,12 @@
+﻿@model IEnumerable<Blog.Models.PostViewModel>
+
+<h2>My Posts</h2>
+
+<div class="row">
+    @if (Model.Any())
+    {
+        @Html.DisplayFor(x => x)
+    }
+</div>
+
+

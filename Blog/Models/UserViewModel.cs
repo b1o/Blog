@@ -12,6 +12,10 @@ namespace Blog.Models
 
         public string Name { get; set; }
 
+        public byte[] HeaderImage { get; set; }
+
+        public byte[] ProfileImage { get; set; }
+
         public ICollection<Post> Posts { get; set; }
 
         public ICollection<ApplicationUser> Followers { get; set; }

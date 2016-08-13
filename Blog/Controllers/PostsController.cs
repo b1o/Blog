@@ -54,5 +54,28 @@ namespace Blog.Controllers
 
             return this.View();
         }
+
+        public ActionResult GetUserPosts(string name)
+        {
+            var model = this.db.Users
+            .Where(u => u.DisplayName == name)
+            .Select(u => u.Posts)
+            .FirstOrDefault()
+            .OrderByDescending(e => e.PostedOn)
+            .Select(e => new PostViewModel()
+            {
+                AuthorDisplayName = e.Author.DisplayName,
+                Id = e.Id,
+                Author = e.Author,
+                PostedOn = e.PostedOn,
+                Title = e.Title,
+                Tags = e.Tags,
+                Description = e.Description,
+                Content = e.Content,
+                IsPublic = e.isPublic
+            });
+
+            return this.PartialView("_UserPostsPartial", model);
+        }
     }
 }

@@ -14,7 +14,11 @@ namespace Blog.Controllers
         // GET: Dashboard
         public ActionResult Index()
         {
-            var posts = this.db.Posts
+            var currentUserId = this.User.Identity.GetUserId();
+            var currentUser = this.db.Users.FirstOrDefault(u => u.Id == currentUserId);
+
+            var posts = currentUser.Following
+                .SelectMany(u => u.Posts)
                 .Where(p => p.isPublic)
                 .OrderByDescending(p => p.PostedOn)
                 .Select( e => new PostViewModel()

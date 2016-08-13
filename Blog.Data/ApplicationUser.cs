@@ -15,19 +15,22 @@ namespace Blog.Data
         [Required]
         public string DisplayName { get; set; }
 
-        public ISet<ApplicationUser> Followers { get; set; }
+        public virtual ISet<ApplicationUser> Followers { get; set; }
 
-        public ISet<ApplicationUser> Following { get; set; }
+        public virtual ISet<ApplicationUser> Following { get; set; }
 
-        public ISet<Post> Posts { get; set; }
+        public virtual ISet<Post> Posts { get; set; }
 
         public byte[] ProfileImage { get; set; }
+
+        public byte[] HeaderImage { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
             var userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);
             // Add custom user claims here
+            userIdentity.AddClaim(new Claim("DisplayName", this.DisplayName));
             return userIdentity;
         }
     }
