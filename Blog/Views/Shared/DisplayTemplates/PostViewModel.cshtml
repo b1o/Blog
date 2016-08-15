@@ -14,8 +14,21 @@
     </div>
     <div class="panel-footer">
         Posted on: @Model.PostedOn.ToShortDateString()
-        <span class="pull-right">
+        <span data-toggle="popover" data-trigger="hover" class="user-link pull-right">
             by <i>@Html.ActionLink(@Model.AuthorDisplayName, "Show", "Users", new {name = Model.Author.DisplayName}, new {HtmlAttributes = new {id = Model.Author.DisplayName}})</i>
         </span>
     </div>
+
+    <script>
+    $("[data-toggle='popover']")
+        .hover(function() {
+            $.ajax({
+                url: "@Url.Action("PopulateHoverCard", "Users", new { name = Model.AuthorDisplayName})",
+                success: function(data) {
+                    $("#popover-content-wrapper").html(data);
+                }
+            });
+        });
+    </script>
 </div>
+

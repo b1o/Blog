@@ -21,6 +21,7 @@ namespace Blog.Controllers
             {
                 Name = user.DisplayName,
                 Followers = user.Followers,
+                Following = user.Following,
                 Posts = user.Posts,
                 Id = user.Id
             };
@@ -32,9 +33,28 @@ namespace Blog.Controllers
             if (Utils.GetUser(this.User.Identity.GetUserId(), this.db, out currentUser))
             {
                 this.ViewBag.IsFollowing = currentUser.Following.Contains(user) && currentUser != user;
-            }
 
+                this.ViewBag.IsCurrentUser = currentUser.DisplayName == name;
+            }
             return this.View(userViewModel);
+        }
+
+        public ActionResult PopulateHoverCard(string name)
+        {
+            var user = this.db.Users.FirstOrDefault(u => u.DisplayName == name);
+            if (user != null)
+            {
+                var userViewModel = new UserViewModel
+                {
+                    Name = user.DisplayName,
+                    Followers = user.Followers,
+                    Posts = user.Posts,
+                    Id = user.Id
+                };
+
+                return this.PartialView("_HoverCard", userViewModel);
+            }
+            return this.PartialView("_HoverCard", new UserViewModel() {Name = "error"});
         }
 
         public FileContentResult GetUserProfileImage(string id)
@@ -119,6 +139,7 @@ namespace Blog.Controllers
             if (targetUser != null && currentUser != null && !currentUser.Following.Contains(targetUser) && targetUser != currentUser)
             {
                 currentUser.Following.Add(targetUser);
+                targetUser.Followers.Add(currentUser);
                 this.db.SaveChanges();
             }
 
@@ -134,6 +155,7 @@ namespace Blog.Controllers
             if (targetUser != null && currentUser != null && currentUser.Following.Contains(targetUser) && targetUser != currentUser)
             {
                 currentUser.Following.Remove(targetUser);
+                targetUser.Followers.Remove(currentUser);
                 this.db.SaveChanges();
             }
 

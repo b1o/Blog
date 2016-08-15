@@ -1,0 +1,8 @@
+﻿@model Blog.Models.UserViewModel
+
+@{
+    ViewBag.Title = "_HoverCard";
+}
+
+<img class="img-rounded" width="32" height="32" src="@Url.Action("GetUserProfileImage", "Users", new { id = Model.Id})"/>
+@Model.Name

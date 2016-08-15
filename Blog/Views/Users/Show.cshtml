@@ -32,7 +32,11 @@
         <ul class="nav nav-tabs">
             <li role="presentation"><a data-toggle="tab" href="#posts">Posts</a></li>
             <li role="presentation"><a data-toggle="tab" href="#likes">Likes</a></li>
-            <li role="presentation"><a data-toggle="tab" href="#following">Following</a></</li>
+            <li role="presentation"><a data-toggle="tab" href="#followers">Followers</a></li>
+            @if (ViewBag.IsCurrentUser)
+            {
+                <li role="presentation"><a data-toggle="tab" href="#following">Following</a></li>
+            }
         </ul>
     </div>
 
@@ -42,10 +46,32 @@
             @Html.Action("GetUserPosts", "Posts", new { name = Model.Name })
         </div>
         <div id="likes" class="tab-pane fade">
-            Likes
         </div>
-        <div id="following" class="tab-pane fade">
+        <div id="followers" class="tab-pane fade">
+            @foreach (var user in @Model.Followers)
+            {
+                <div class="panel panel-info">
+                    <div class="panel-info">
+                        <img class="img-rounded" width="32" height="32" src="@Url.Action("GetUserProfileImage", "Users", new {id = user.Id})"/>
+                        @Html.ActionLink(user.DisplayName, "Show", "Users", new {name = user.DisplayName}, null)
+                    </div>
+                </div>
+            }
         </div>
+        @if (ViewBag.IsCurrentUser)
+        {
+            <div id="following" class="tab-pane fade">
+                @foreach (var user in @Model.Following)
+                {
+                    <div class="panel panel-info">
+                        <div class="panel-info">
+                            <img class="img-rounded" width="32" height="32" src="@Url.Action("GetUserProfileImage", "Users", new {id = user.Id})" />
+                            @Html.ActionLink(user.DisplayName, "Show", "Users", new { name = user.DisplayName }, null)
+                        </div>
+                    </div>
+                }
+            </div>
+        }
     </div>
 </div>
 

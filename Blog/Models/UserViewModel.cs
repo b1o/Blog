@@ -19,5 +19,7 @@ namespace Blog.Models
         public ICollection<Post> Posts { get; set; }
 
         public ICollection<ApplicationUser> Followers { get; set; }
+
+        public ICollection<ApplicationUser> Following { get; set; }
     }
 }
