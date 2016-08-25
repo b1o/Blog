@@ -34,26 +34,69 @@
             </div>
         </div>
     </div>
-    <div class="container body-content">
-        @RenderBody()
+
+
+    <div class="container-fluid body-content">
+        <div class="container">
+            @RenderBody()
+        </div>
+
         <hr />
         <footer>
             <p>&copy; @DateTime.Now.Year - FollowMe</p>
         </footer>
     </div>
 
-    <div id="popover-content-wrapper" style="display: none;"></div>
+    <div id="popover-content-wrapper" style="display: none;">Loading...</div>
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
 
     <script>
-        $("[data-toggle='popover']")
-            .popover({
-                html: true,
-                content: function () {
-                    return $("#popover-content-wrapper").html();
-                }
+        $(document)
+            .ready(function() {
+                $("[data-toggle='popover']")
+                    .hover(function() {
+                        var self = this;
+                        $(self).off('hover');
+                        var name = $(this).data("id");
+                        $.ajax({
+                            url: "/Users/PopulateHoverCard?name=" + name,
+                            success: function(data) {
+                                $(self)
+                                    .popover({
+                                        content: data,
+                                        trigger: 'manual',
+                                        position: 'auto bottom',
+                                        html: true
+                                    })
+                                    .on("mouseenter",
+                                        function() {
+                                            var _this = this;
+                                            $(this).popover('show');
+                                            $(".popover")
+                                                .on("mouseleave",
+                                                    function() {
+                                                        $(_this).popover("hide");
+                                                    });
+                                        })
+                                    .on("mouseleave",
+                                        function() {
+                                            var _this = this;
+                                            setTimeout(function() {
+                                                    if (!$(".popover:hover").length) {
+                                                        $(_this).popover("hide");
+                                                    }
+                                                },
+                                                300);
+                                        });
+                            }
+                        });
+                    });
             });
+
+        
+
+
     </script>
 
 </body>

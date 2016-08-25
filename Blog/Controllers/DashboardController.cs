@@ -11,6 +11,7 @@ namespace Blog.Controllers
     [Authorize]
     public class DashboardController : BaseController
     {
+        //TODO: exctract the select as expression in the PostViewModel for less code duplication
         // GET: Dashboard
         public ActionResult Index()
         {
@@ -20,7 +21,6 @@ namespace Blog.Controllers
             var posts = currentUser.Following
                 .SelectMany(u => u.Posts)
                 .Where(p => p.isPublic)
-                .OrderByDescending(p => p.PostedOn)
                 .Select( e => new PostViewModel()
                 {
                     Id = e.Id,
@@ -33,6 +33,22 @@ namespace Blog.Controllers
                     Title = e.Title,
                     Author = e.Author
                 });
+
+            var myPosts = currentUser.Posts.Select(e => new PostViewModel()
+            {
+                Id = e.Id,
+                AuthorDisplayName = e.Author.DisplayName,
+                Content = e.Content,
+                IsPublic = e.isPublic,
+                Description = e.Description,
+                PostedOn = e.PostedOn,
+                Tags = e.Tags,
+                Title = e.Title,
+                Author = e.Author
+            });
+
+            posts = posts.Concat(myPosts).OrderByDescending(p => p.PostedOn);
+
             return View(posts);
         }
     }

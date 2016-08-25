@@ -3,81 +3,53 @@
 @{
     ViewBag.Title = "Show";
 }
-
-<div class="container-fluid">
-    <div id="profile-header" class="jumbotron">
-        <div class="container">
-            @if (ViewBag.CanEdit)
+<div id="profile-header" class="jumbotron">
+    <div class="container">
+        @if (!ViewBag.IsCurrentUser)
             {
-                <button class="btn btn-default pull-right" onclick="location.href='@Url.Action("Edit", "Users")'">
-                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-                </button>
-            }
-            @if (ViewBag.isFollowing)
-            {
-                @Html.ActionLink("Unfollow", "Unfollow", "Users", new {name = Model.Name}, null)
+                if (ViewBag.isFollowing)
+                {
+                @Html.ActionLink("Unfollow", "Unfollow", "Users", new { name = Model.Name }, null)
             }
             else
             {
                 @Html.ActionLink("Follow", "Follow", "Users", new { name = Model.Name }, null)
             }
-            <img class="img-circle pull-left" width="128" height="128" src="@Url.Action("GetUserProfileImage", "Users", new {id = Model.Id})"/>
-            <div class="page-header">
-                <h2>@Model.Name</h2>
-            </div>
+        }
+        <img class="img-circle pull-left" width="128" height="128" src="@Url.Action("GetUserProfileImage", "Users", new {id = Model.Id})" />
+        <div class="page-header">
+            <h2>@Model.Name</h2>
         </div>
     </div>
+</div>
 
+<div class="profile-body container-fluid">
     <div class="posts-box">
-        <ul class="nav nav-tabs">
-            <li role="presentation"><a data-toggle="tab" href="#posts">Posts</a></li>
+        <ul class="nav nav-tabs nav-justified">
+            <li role="presentation" class="active"><a data-toggle="tab" href="#posts">Posts</a></li>
             <li role="presentation"><a data-toggle="tab" href="#likes">Likes</a></li>
-            <li role="presentation"><a data-toggle="tab" href="#followers">Followers</a></li>
-            @if (ViewBag.IsCurrentUser)
-            {
-                <li role="presentation"><a data-toggle="tab" href="#following">Following</a></li>
-            }
         </ul>
     </div>
 
     <div class="tab-content">
         <div id="posts" class="tab-pane fade in active">
-            Posts
             @Html.Action("GetUserPosts", "Posts", new { name = Model.Name })
         </div>
         <div id="likes" class="tab-pane fade">
         </div>
-        <div id="followers" class="tab-pane fade">
-            @foreach (var user in @Model.Followers)
-            {
-                <div class="panel panel-info">
-                    <div class="panel-info">
-                        <img class="img-rounded" width="32" height="32" src="@Url.Action("GetUserProfileImage", "Users", new {id = user.Id})"/>
-                        @Html.ActionLink(user.DisplayName, "Show", "Users", new {name = user.DisplayName}, null)
-                    </div>
-                </div>
-            }
-        </div>
-        @if (ViewBag.IsCurrentUser)
-        {
-            <div id="following" class="tab-pane fade">
-                @foreach (var user in @Model.Following)
-                {
-                    <div class="panel panel-info">
-                        <div class="panel-info">
-                            <img class="img-rounded" width="32" height="32" src="@Url.Action("GetUserProfileImage", "Users", new {id = user.Id})" />
-                            @Html.ActionLink(user.DisplayName, "Show", "Users", new { name = user.DisplayName }, null)
-                        </div>
-                    </div>
-                }
-            </div>
-        }
     </div>
 </div>
 
 <script>
+    $(document).ready(function () {
+        if (location.hash !== '') $('a[href="' + location.hash + '"]').tab('show');
+        return $('a[data-toggle="tab"]').on('shown', function (e) {
+            return location.hash = $(e.target).attr('href').substr(1);
+        });
+    });
+
     $(function() {
         $("#profile-header")
-        .css("background-image", "url(@Url.Action("GetUserHeaderImage", "Users", new {id = Model.Id}))").blur();
+            .css("background-image", "url(@Url.Action("GetUserHeaderImage", "Users", new {id = Model.Id}))").blur();
     })
 </script>

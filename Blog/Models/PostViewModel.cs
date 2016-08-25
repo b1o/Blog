@@ -12,7 +12,7 @@ namespace Blog.Models
     {
         public int Id { get; set; }
 
-        [Display(Name = "Author")]
+        [Display(Name = "Автор")]
         public string AuthorDisplayName { get; set; }
 
         public ApplicationUser Author { get; set; }

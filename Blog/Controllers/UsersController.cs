@@ -39,6 +39,29 @@ namespace Blog.Controllers
             return this.View(userViewModel);
         }
 
+        public ActionResult Profile()
+        {
+            var currentUserId = this.User.Identity.GetUserId();
+            var currentUser = this.db.Users.FirstOrDefault(u => u.Id == currentUserId);
+            if (currentUser != null)
+            {
+                var model = new UserViewModel()
+                {
+                    Id = currentUser.Id,
+                    Name = currentUser.DisplayName,
+                    ProfileImage = currentUser.ProfileImage,
+                    Posts = currentUser.Posts,
+                    Following = currentUser.Following,
+                    Followers = currentUser.Followers,
+                    HeaderImage = currentUser.HeaderImage
+                };
+
+                return this.View(model);
+            }
+
+            return this.HttpNotFound();
+        }
+
         public ActionResult PopulateHoverCard(string name)
         {
             var user = this.db.Users.FirstOrDefault(u => u.DisplayName == name);
@@ -125,7 +148,7 @@ namespace Blog.Controllers
                     user.ProfileImage = profileImgData;
                 }
                 this.db.SaveChanges();
-                return this.RedirectToAction("Show", "Users", new {name = user.DisplayName});
+                return this.RedirectToAction("Profile", "Users");
             }
             return this.View(model);
         }

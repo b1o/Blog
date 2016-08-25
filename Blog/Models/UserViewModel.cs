@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 using Blog.Data;
@@ -10,10 +11,13 @@ namespace Blog.Models
     {
         public string Id { get; set; }
 
+        [Display(Name="Display Name")]
         public string Name { get; set; }
 
+        [Display(Name = "Header Image")]
         public byte[] HeaderImage { get; set; }
 
+        [Display(Name = "Profile Image")]
         public byte[] ProfileImage { get; set; }
 
         public ICollection<Post> Posts { get; set; }

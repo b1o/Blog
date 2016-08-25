@@ -4,5 +4,28 @@
     ViewBag.Title = "_HoverCard";
 }
 
-<img class="img-rounded" width="32" height="32" src="@Url.Action("GetUserProfileImage", "Users", new { id = Model.Id})"/>
-@Model.Name
+<div class="hovercard-content list-group list-inline">
+    <div class="hovercard-header">
+        <li><img class="img-circle center-block" width="64" height="64" src="@Url.Action("GetUserProfileImage", "Users", new {id = Model.Id})" /></li>
+    </div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Posts</th>
+                <th class="text-right">Likes</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td class="text-center"><a href="@Url.Action("Show", "Users", new {name = Model.Name})#posts">@Model.Posts.Count</a></td>
+                <td class="text-center"><a href="@Url.Action("Show", "Users", new {name = Model.Name})#likes">Likes</a></td>
+            </tr>
+            </tbody>
+        </table>
+       
+    <script>
+        $(".popover-content .hovercard-header")
+            .css("background-image", "url(@Url.Action("GetUserHeaderImage", "Users", new {id = Model.Id}))");
+    </script>
+
+</div>

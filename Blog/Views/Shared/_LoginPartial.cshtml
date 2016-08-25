@@ -8,8 +8,7 @@
 
     <ul class="nav navbar-nav navbar-right">
         <li>
-            @Html.ActionLink("Hello " + this.User.Identity.GetDisplayName() + "!", "Show", "Users", new { name = this.User.Identity.GetDisplayName() }
-       , new { htmlAttributes = new {id = this.User.Identity.GetDisplayName()} })
+            @Html.ActionLink("Hello " + this.User.Identity.GetDisplayName() + "!", "Profile", "Users")
         </li>
         <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
     </ul>

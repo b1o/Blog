@@ -10,6 +10,7 @@ namespace Blog.Models
     {
         public string Id { get; set; }
 
+        [Display(Name = "Display Name")]
         public string DisplayName { get; set; }
 
         public byte[] ProfileImage { get; set; }
