@@ -10,7 +10,7 @@
         {
                 if (ViewBag.isFollowing)
                 {
-                    <button type="button" class="btn btn-danger center-block" onclick="location.href = '@Url.Action("Unfollow", "Users", new {name = Model.Name})'"><span class="glyphicon glyphicon-remove"></span></button>
+                    <button type="button" class="btn btn-danger center-block" onclick="location.href = '@Url.Action("Unfollow", "Users", new {name = Model.Name})'"><span aria-label="unfollow" class="glyphicon glyphicon-remove"></span></button>
                 }
                 else
                 {
@@ -53,11 +53,11 @@
 
         @if (ViewBag.isFollowing)
         {
-            @:$(".user-avatar img").css("border", "5px solid green");
+            @:$(".user-avatar img").css("border", "3px solid green");
         }
         else
         {
-            @:$(".user-avatar img").css("border", "5px solid red");
+            @:$(".user-avatar img").css("border", "3px solid red");
         }
     });
 </script>

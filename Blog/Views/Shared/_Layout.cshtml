@@ -22,13 +22,12 @@
                 </button>
                 @Html.ActionLink("FollowMe", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
-            <div class="navbar-collapse collapse">
+            <div class="navbar-collapse collapse pull-right">
                 <ul class="nav navbar-nav">
                     @if (Request.IsAuthenticated)
                     {
-                        <li>@Html.ActionLink("Dashboard", "Index", "Dashboard")</li>
-                        <li>@Html.ActionLink("My Posts", "My", "Home")</li>
-                        <li><a data-toggle="modal" data-url="/Posts/Create" class="btn btn-success btn-sm" id="btnCreate">Create</a></li>
+                        <li><a href="@Url.Action("Index", "Dashboard")"><span class="glyphicon glyphicon-home" style="font-size: 1.5em"></span></a></li>
+                        <li><a data-toggle="modal" data-url="/Posts/Create" class="glyph-button"><span class="glyphicon glyphicon-upload" style="font-size: 1.5em"></span></a></li>
                     }
                 </ul>
                 @Html.Partial("_LoginPartial")
@@ -38,9 +37,7 @@
 
 
     <div class="container-fluid body-content">
-        <div class="container">
             @RenderBody()
-        </div>
 
         <hr />
         <footer>
@@ -88,28 +85,32 @@
                                         position: 'auto bottom',
                                         html: true
                                     })
+                                    .popover('show')
                                     .on("mouseenter",
                                         function() {
                                             var _this = this;
-                                            $(this).popover('show');
                                             $(".popover")
                                                 .on("mouseleave",
                                                     function() {
-                                                        $(_this).popover("hide");
+                                                        setTimeout(function() {
+                                                                if (!$("[data-toggle='popover']:hover").length) {
+                                                                    $(_this).popover("hide");
+                                                                }
+                                                            },
+                                                            300);
                                                     });
-                                        })
-                                    .on("mouseleave",
-                                        function() {
-                                            var _this = this;
-                                            setTimeout(function() {
-                                                    if (!$(".popover:hover").length) {
-                                                        $(_this).popover("hide");
-                                                    }
-                                                },
-                                                300);
                                         });
                             }
                         });
+                    }, function() {
+                        var _this = this;
+                        console.log($(".popover:hover"));
+                        setTimeout(function() {
+                                if (!$(".popover:hover").length) {
+                                    $(_this).popover("hide");
+                                }
+                            },
+                            300);
                     });
             });
 

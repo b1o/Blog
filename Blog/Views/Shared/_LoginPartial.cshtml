@@ -8,9 +8,9 @@
 
     <ul class="nav navbar-nav navbar-right">
         <li>
-            @Html.ActionLink("Hello " + this.User.Identity.GetDisplayName() + "!", "Profile", "Users")
+            <a href="@Url.Action("Profile", "Users")"><span class="glyphicon glyphicon-user" style="font-size: 1.5em"></span></a>
         </li>
-        <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+        <li><a href="javascript:document.getElementById('logoutForm').submit()"><span class="glyphicon glyphicon-log-out" style="font-size: 1.5em"></span></a></li>
     </ul>
     }
 }

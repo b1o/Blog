@@ -124,10 +124,12 @@ namespace Blog.Controllers
                     .FirstOrDefault(u => u.Id == model.Id);
                 user.DisplayName = model.DisplayName;
 
-                byte[] profileImgData = null;
-                byte[] headerImgData = null;
+                
                 if (Request.Files.Count > 0)
                 {
+                    byte[] profileImgData = null;
+                    byte[] headerImgData = null;
+
                     HttpPostedFileBase profileImage = Request.Files["ProfileImage"];
                     HttpPostedFileBase headerImage = Request.Files["HeaderImage"];
 
@@ -136,17 +138,19 @@ namespace Blog.Controllers
                         profileImgData = binary.ReadBytes(profileImage.ContentLength);
                         headerImgData = binary2.ReadBytes(headerImage.ContentLength);
                     }
+
+                    if (headerImgData.Length > 0)
+                    {
+                        user.HeaderImage = headerImgData;
+                    }
+
+                    if (profileImgData.Length > 0)
+                    {
+                        user.ProfileImage = profileImgData;
+                    }
                 }
 
-                if (headerImgData.Length > 0)
-                {
-                    user.HeaderImage = headerImgData;
-                }
-
-                if (profileImgData.Length > 0)
-                {
-                    user.ProfileImage = profileImgData;
-                }
+                
                 this.db.SaveChanges();
                 return this.RedirectToAction("Profile", "Users");
             }

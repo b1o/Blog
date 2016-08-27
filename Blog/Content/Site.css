@@ -64,6 +64,7 @@ body {
     -moz-appearance: none;
     outline: none;
     border: 0;
+    cursor: pointer;
     background: transparent;
 }
 
@@ -120,6 +121,7 @@ body {
     margin-top: 10px;
 }
 
+
 input,
 textarea {
     max-width: 280px;
@@ -135,4 +137,22 @@ textarea {
 
 .body-content {
     padding: 10px;
+}
+
+body::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: #F5F5F5;
+}
+
+body::-webkit-scrollbar
+{
+	width: 10px;
+	background-color: #FFFFFF;
+}
+
+body::-webkit-scrollbar-thumb
+{
+	background-color: #000000;
+	
 }
