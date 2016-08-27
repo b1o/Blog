@@ -18,6 +18,7 @@ namespace Blog.Models
         public ApplicationUser Author { get; set; }
 
         [Required]
+        [MaxLength(100)]
         public string Title { get; set; }
 
         public DateTime PostedOn { get; set; }
@@ -26,10 +27,12 @@ namespace Blog.Models
 
         public bool IsPublic { get; set; }
 
+        [MaxLength(300)]
         [DataType(DataType.MultilineText)]
         public string Description { get; set; }
 
         [Required]
+        [MaxLength(300)]
         [DataType(DataType.MultilineText)]
         public string Content { get; set; }
     }

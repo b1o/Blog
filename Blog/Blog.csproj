@@ -359,6 +359,7 @@
     <Content Include="Views\Posts\_UserPostsPartial.cshtml" />
     <Content Include="Views\Shared\_HoverCard.cshtml" />
     <Content Include="Views\Users\Profile.cshtml" />
+    <Content Include="Views\Posts\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

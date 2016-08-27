@@ -1,7 +1,19 @@
-﻿@model Blog.Models.PostViewModel
+﻿@using Microsoft.AspNet.Identity
+@model Blog.Models.PostViewModel
 
 <div id="post-@Model.Id" class="post panel panel-info">
     <div class="panel-heading">
+        @if (Model.Author.Id == this.User.Identity.GetUserId())
+        {
+            <div class="dropdown pull-right">   
+                <button class="dropdown-toggle glyph-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" id="post-dropdown"><span class="glyphicon glyphicon-option-vertical" ></span></button>
+                <ul class="dropdown-menu" aria-labelledby="post-dropdown">
+                    <li><a class="btn-link" data-toggle="modal" data-url="/Posts/Delete/@Model.Id">Delete</a></li>
+                    <li><a href="#">Edit</a></li>
+                </ul>
+            </div>
+            //<button class="pull-right close" data-url="/Posts/Delete/@Model.Id" data-toggle="modal">&times;</button>
+        }
         @Model.Title
     </div>
 
@@ -18,16 +30,4 @@
             by <i>@Html.ActionLink(@Model.AuthorDisplayName, "Show", "Users", new { name = Model.Author.DisplayName },  new { data_id = Model.Author.DisplayName, data_toggle = "popover" })</i>
         </span>
     </div>
-
-    @*<script>
-        $("[data-toggle='popover']")
-            .hover(function () {
-                $.ajax({
-                    url: "@Url.Action("PopulateHoverCard", "Users", new { name = Model.AuthorDisplayName})",
-                    success: function (data) {
-                        $(".pop-content").html(data);
-                    }
-                });
-            });
-    </script>*@
 </div>

@@ -8,6 +8,7 @@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
 
 </head>
 <body>
@@ -26,8 +27,8 @@
                     @if (Request.IsAuthenticated)
                     {
                         <li>@Html.ActionLink("Dashboard", "Index", "Dashboard")</li>
-                        <li>@Html.ActionLink("My Post", "My", "Home")</li>
-                        <li>@Html.ActionLink("Create Post", "Create", "Posts")</li>
+                        <li>@Html.ActionLink("My Posts", "My", "Home")</li>
+                        <li><a data-toggle="modal" data-url="/Posts/Create" class="btn btn-success btn-sm" id="btnCreate">Create</a></li>
                     }
                 </ul>
                 @Html.Partial("_LoginPartial")
@@ -46,14 +47,32 @@
             <p>&copy; @DateTime.Now.Year - FollowMe</p>
         </footer>
     </div>
-
+        
+    <div class="modal fade" id="modalPopup">
+        <div class="modal-dialog">
+            
+        </div>
+    </div>
     <div id="popover-content-wrapper" style="display: none;">Loading...</div>
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
 
     <script>
         $(document)
-            .ready(function() {
+            .ready(function () {
+                $("[data-toggle='modal']")
+                    .click(function() {
+                        $.ajax({
+                            url: $(this).data("url"),
+                            success: function(data) {
+                                $(".modal-dialog").html(data);
+                                $("#modalPopup").modal("show");
+                                $.validator.unobtrusive.parse(".modal-dialog");
+                            }
+                        });
+                    });
+
+
                 $("[data-toggle='popover']")
                     .hover(function() {
                         var self = this;

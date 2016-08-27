@@ -12,13 +12,49 @@ namespace Blog.Controllers
     [Authorize]
     public class PostsController : BaseController
     {
+        // GET: Delete
+        public ActionResult Delete(int id)
+        {
+            var post = this.db.Posts.FirstOrDefault(p => p.Id == id);
+            if (post != null)
+            {
+                var model = new PostViewModel()
+                {
+                    Id = post.Id,
+                    Author = post.Author,
+                    PostedOn = post.PostedOn,
+                    Content = post.Content,
+                    IsPublic = post.isPublic,
+                    Tags = post.Tags,
+                    Description = post.Description,
+                    Title = post.Title,
+                    AuthorDisplayName = post.Author.DisplayName
+                };
+                return this.PartialView("Delete", model);
+            }
+
+            return this.HttpNotFound("Post not found");
+        }
+
+        // POST: Delete
+        [HttpPost]
+        public ActionResult Delete(PostViewModel model)
+        {
+            var post = this.db.Posts.FirstOrDefault(p => p.Id == model.Id);
+            this.db.Posts.Remove(post);
+            this.db.SaveChanges();
+
+            return this.RedirectToAction("My", "Home");
+        }
+
         // GET: Create
         [HttpGet]
         public ActionResult Create()
         {
-            return this.View();
+            return this.PartialView("Create");
         }
 
+        // POST: Create
         [HttpPost]
         [ValidateInput(false)]
         public ActionResult Create(PostViewModel model)
@@ -52,7 +88,7 @@ namespace Blog.Controllers
                 }
             }
 
-            return this.View();
+            return this.PartialView("Create", model);
         }
 
         public ActionResult GetUserPosts(string name)
