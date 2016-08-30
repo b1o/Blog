@@ -12,6 +12,8 @@ namespace Blog.Data
     {
         public IDbSet<Post> Posts { get; set; }
 
+        public IDbSet<Like> Likes { get; set; }
+
         public IDbSet<Tag> Tags { get; set; }
 
         public ApplicationDbContext()

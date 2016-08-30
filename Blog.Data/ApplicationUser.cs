@@ -21,6 +21,8 @@ namespace Blog.Data
 
         public virtual ISet<Post> Posts { get; set; }
 
+        public virtual ISet<Like> LikesPosts { get; set; }
+
         public byte[] ProfileImage { get; set; }
 
         public byte[] HeaderImage { get; set; }

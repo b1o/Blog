@@ -18,7 +18,7 @@
             <tbody>
             <tr>
                 <td class="text-center"><a href="@Url.Action("Show", "Users", new {name = Model.Name})#posts">@Model.Posts.Count</a></td>
-                <td class="text-center"><a href="@Url.Action("Show", "Users", new {name = Model.Name})#likes">Likes</a></td>
+                <td class="text-center"><a href="@Url.Action("Show", "Users", new {name = Model.Name})#likes">@Model.Likes.Count</a></td>
             </tr>
             </tbody>
         </table>

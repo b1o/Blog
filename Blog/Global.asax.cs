@@ -13,7 +13,7 @@ namespace Blog
         {
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<ApplicationDbContext, DbMigrationConfig>());
 
-            AreaRegistration.RegisterAllAreas();
+            AreaRegistration.RegisterAllAreas();    
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);

@@ -15,6 +15,7 @@ namespace Blog.Data
             this.Tags = new HashSet<Tag>();
             this.PostedOn = DateTime.Now;
             this.ScheduledOn = PostedOn;
+            this.Likes = 0;
         }
 
         public int Id { get; set; }
@@ -25,11 +26,13 @@ namespace Blog.Data
 
         public bool isPublic { get; set; }
 
-        public ISet<Tag> Tags { get; set; }
+        public virtual ISet<Tag> Tags { get; set; }
 
         public DateTime PostedOn { get; set; }
 
         public DateTime ScheduledOn { get; set; }
+
+        public int Likes { get; set; }
 
         [Required]
         [MaxLength(200)]

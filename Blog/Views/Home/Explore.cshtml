@@ -1,0 +1,37 @@
+﻿@model IEnumerable<Blog.Models.UserViewModel>
+
+@{
+    ViewBag.Title = "Explore";
+}
+
+<div  class="container">
+    <h2 class="text-center">Explore</h2>
+    <div id="users-container" class="row">
+        @Html.Action("GetUsers", "Users", new { limit = 3, offset = 0 })
+    </div>
+</div>
+
+<div class="row">
+    <button id="load-more-btn" class="btn btn-info center-block" onclick="loadMore()"> <span style="display: none" id="loading" class="glyphicon glyphicon-refresh"></span> Load More</button>
+</div>
+
+<script>
+    $(document)
+        .ajaxStart(function() {
+            $("#loading").show();
+        })
+        .ajaxStop(function() {
+            $("#loading").hide();
+        });
+
+    function loadMore(offest, limit) {
+        var offset = $(".user-list:last-child").data("offset");
+        $.ajax({
+            url: '@Url.Action("GetUsers", "Users")',
+            data: { offset: offset, limit: 3 },
+            success: function(data) {
+                $("#users-container").append(data);
+            }
+        });
+    }
+</script>

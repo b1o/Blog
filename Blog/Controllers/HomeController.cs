@@ -10,6 +10,7 @@ namespace Blog.Controllers
 {
     public class HomeController : BaseController
     {
+        [Authorize]
         public ActionResult Index()
         {
             if (Request.IsAuthenticated)
@@ -18,6 +19,12 @@ namespace Blog.Controllers
             }
 
             return this.RedirectToAction("Login", "Account");
+        }
+
+        [Authorize]
+        public ActionResult Explore()
+        {
+            return this.View();
         }
 
         [Authorize]

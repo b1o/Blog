@@ -25,8 +25,13 @@
                 var adminPassword = "Admin";
                 string adminRole = "Administrator";
 
+                var userMail = "user@mail.bg";
+                var userName = "User";
+                var userPass = "user";
+
                 CreateAdminUser(context, adminDisplayName, adminEmail, adminPassword, adminRole);
-                CreateSeveralPosts(context);    
+                this.CreateUser(context, userName, userMail, userPass);
+                CreateSeveralPosts(context);
             }
         }
 
@@ -110,6 +115,33 @@
             if (!addAdminRoleResult.Succeeded)
             {
                 throw new Exception(string.Join("; ", addAdminRoleResult.Errors));
+            }
+        }
+
+        private void CreateUser(ApplicationDbContext context, string adminDisplayName, string adminEmail, string adminPassword)
+        {
+            var user = new ApplicationUser
+            {
+                UserName = adminEmail,
+                DisplayName = adminDisplayName,
+                Email = adminEmail
+            };
+
+            var userStore = new UserStore<ApplicationUser>(context);
+            var userManager = new UserManager<ApplicationUser>(userStore);
+            userManager.PasswordValidator = new PasswordValidator
+            {
+                RequiredLength = 1,
+                RequireNonLetterOrDigit = false,
+                RequireDigit = false,
+                RequireLowercase = false,
+                RequireUppercase = false
+            };
+
+            var userCreateResult = userManager.Create(user, adminPassword);
+            if (!userCreateResult.Succeeded)
+            {
+                throw new Exception(string.Join("; ", userCreateResult.Errors));
             }
         }
     }

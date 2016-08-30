@@ -5,15 +5,17 @@
     <div class="panel-heading">
         @if (Model.Author.Id == this.User.Identity.GetUserId())
         {
-            <div class="dropdown pull-right">   
+            <div class="dropdown pull-right">
                 <button class="dropdown-toggle glyph-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" id="post-dropdown"><span class="glyphicon glyphicon-option-vertical" ></span></button>
                 <ul class="dropdown-menu" aria-labelledby="post-dropdown">
                     <li><a class="btn-link" data-toggle="modal" data-url="/Posts/Delete/@Model.Id">Delete</a></li>
                     <li><a href="#">Edit</a></li>
                 </ul>
             </div>
-            //<button class="pull-right close" data-url="/Posts/Delete/@Model.Id" data-toggle="modal">&times;</button>
         }
+        <span class="user-link pull-right">
+            by <i>@Html.ActionLink(@Model.AuthorDisplayName, "Show", "Users", new { name = Model.Author.DisplayName }, new { data_id = Model.Author.DisplayName, data_toggle = "popover" })</i>
+        </span>
         @Model.Title
     </div>
 
@@ -26,8 +28,46 @@
     </div>
     <div class="panel-footer">
         Posted on: @Model.PostedOn.ToShortDateString()
-        <span class="user-link pull-right">
-            by <i>@Html.ActionLink(@Model.AuthorDisplayName, "Show", "Users", new { name = Model.Author.DisplayName },  new { data_id = Model.Author.DisplayName, data_toggle = "popover" })</i>
-        </span>
+        <div class="pull-right">
+            @if (Model.IsLiked)
+            {
+                <span class="glyphicon glyphicon-heart glyph-button like-btn" style="color: red"></span>
+                <span id="likes-count">@Model.Likes</span>
+            }
+            else
+            {
+                <span class="glyphicon glyphicon-heart-empty glyph-button like-btn" style="color: black"></span>
+                <span id="likes-count">@Model.Likes</span>
+            }
+        </div>
+        
     </div>
 </div>
+
+<script>
+    $(document).ready(function() {
+        $("#post-@Model.Id .like-btn")
+            .click(function() {
+                var self = this;
+                if ($(this).hasClass("glyphicon-heart-empty")) {
+                    $.ajax({
+                        url: "/Posts/Like/" + @Model.Id,
+                        method: "POST",
+                        success: function(data) {
+                            $(self).toggleClass("glyphicon-heart-empty glyphicon-heart").css("color", "red");
+                            $("#post-@Model.Id #likes-count").text(data.postLikesCount);
+                        }
+                    });
+                } else if($(this).hasClass("glyphicon-heart")){
+                    $.ajax({
+                        url: "/Posts/Unlike/" + @Model.Id,
+                        method: "POST",
+                        success: function(data) {
+                            $(self).toggleClass("glyphicon-heart glyphicon-heart-empty").css("color", "black");
+                            $("#post-@Model.Id #likes-count").text(data.postLikesCount);
+                        }
+                    });
+                }
+            });
+    })
+</script>

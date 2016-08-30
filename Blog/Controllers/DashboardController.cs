@@ -31,7 +31,9 @@ namespace Blog.Controllers
                     PostedOn = e.PostedOn,
                     Tags = e.Tags,
                     Title = e.Title,
-                    Author = e.Author
+                    Author = e.Author,
+                    Likes = this.db.Likes.Count(l => l.LikedPost.Id == e.Id),
+                    IsLiked = currentUser.LikesPosts.Any(l => l.LikedPost.Id == e.Id)
                 });
 
             var myPosts = currentUser.Posts.Select(e => new PostViewModel()
@@ -44,12 +46,14 @@ namespace Blog.Controllers
                 PostedOn = e.PostedOn,
                 Tags = e.Tags,
                 Title = e.Title,
-                Author = e.Author
+                Author = e.Author,
+                Likes = this.db.Likes.Count(l => l.LikedPost.Id == e.Id),
+                IsLiked = currentUser.LikesPosts.Any(l => l.LikedPost.Id == e.Id)
             });
 
             posts = posts.Concat(myPosts).OrderByDescending(p => p.PostedOn);
 
-            return View(posts);
+            return this.View(posts);
         }
     }
 }

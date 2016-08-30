@@ -299,6 +299,7 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Scripts\jquery-3.1.0-vsdoc.js" />
+    <Content Include="Scripts\follow-unfollow.js" />
     <Content Include="Scripts\jquery-3.1.0.js" />
     <Content Include="Scripts\jquery-3.1.0.min.js" />
     <Content Include="Scripts\jquery-3.1.0.slim.js" />
@@ -360,6 +361,9 @@
     <Content Include="Views\Shared\_HoverCard.cshtml" />
     <Content Include="Views\Users\Profile.cshtml" />
     <Content Include="Views\Posts\Delete.cshtml" />
+    <Content Include="Views\Home\Explore.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\UserViewModel.cshtml" />
+    <Content Include="Views\Users\_UserListPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
@@ -391,7 +395,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>53455</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:53455/</IISUrl>
+          <IISUrl>http://localhost:49534/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

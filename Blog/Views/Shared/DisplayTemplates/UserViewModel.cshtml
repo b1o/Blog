@@ -1,0 +1,69 @@
+﻿@model Blog.Models.UserViewModel
+
+@{
+    ViewBag.Title = "UserViewModel";
+}
+
+<div class="col-md-4">
+    <div id="user-@Model.Id" class="user-box col-md-12">
+        <div class="user-box-header">
+            <div class="user-box-controls">
+                @if (Model.IsFollowing)
+                {
+                    <button class="btn btn-info btn-sm pull-right">Unfollow</button>
+                }
+                else
+                {
+                    <button class="btn btn-info pull-right">Follow</button>
+                }
+                @Html.ActionLink(Model.Name, "Show", "Users", new { name = Model.Name }, new { @class = "panel-heading center-block" })
+            </div>
+            <img class="img-circle center-block" width="128" height="128" src="@Url.Action("GetUserProfileImage", "Users", new {id = Model.Id})" />
+        </div>
+        <table class="table user-box-info">
+            <thead>
+                <tr>
+                    <th>Posts</th>
+                    <th class="text-right">0</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="text-center"><a href="@Url.Action("Show", "Users", new {name = Model.Name})#posts">@Model.Posts.Count</a></td>
+                    <td class="text-center"><a href="@Url.Action("Show", "Users", new {name = Model.Name})#likes">Likes</a></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <script>
+            $("#user-@Model.Id .user-box-header")
+                .css("background-image", "url(@Url.Action("GetUserHeaderImage", "Users", new {id = Model.Id}))");
+        </script>
+
+        <script>
+            $(document).ready(function () {
+                $("#user-@Model.Id .user-box-controls button")
+                    .click(function () {
+                        var self = this;
+                        if ($(this).text() == "Unfollow") {
+                            console.log("yes");
+                            $.ajax({
+                                url: '@Url.Action("Unfollow", "Users", new { name = Model.Name})',
+                                success: function (data) {
+                                    $(self).text("Follow");
+                                }
+                            })
+                        } else {
+                            $.ajax({
+                                url: '@Url.Action("Follow", "Users", new { name = Model.Name})',
+                                success: function (data) {
+                                    $(self).text("Unfollow");
+                                }
+                            })
+                        }
+                    });
+            })
+        </script>
+    </div>
+
+</div>

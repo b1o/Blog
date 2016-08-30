@@ -4,22 +4,24 @@
     ViewBag.Title = "Show";
 }
 <div id="profile-header">
-
-    <div class="user-avatar">
-        @if (!ViewBag.IsCurrentUser)
-        {
-                if (ViewBag.isFollowing)
+    @if (!ViewBag.IsCurrentUser)
+    {
+        <div class="follow-button pull-right">
+            @if (Model.IsFollowing)
                 {
-                    <button type="button" class="btn btn-danger center-block" onclick="location.href = '@Url.Action("Unfollow", "Users", new {name = Model.Name})'"><span aria-label="unfollow" class="glyphicon glyphicon-remove"></span></button>
-                }
-                else
-                {
-                    <button type="button" class="btn btn-success center-block" onclick="location.href = '@Url.Action("Follow", "Users", new {name = Model.Name})'"><span class="glyphicon glyphicon-plus"></span></button>
-                }
-        }
-        <img class="img-circle pull-left" width="128" height="128" src="@Url.Action("GetUserProfileImage", "Users", new {id = Model.Id})" />
-    </div>
+                <button class="btn btn-info btn-sm pull-right">Unfollow</button>
+            }
+            else
+            {
+                <button class="btn btn-info pull-right">Follow</button>
+            }
+        </div>
+    }
+</div>
 
+<div class="avatar-image center-block">
+
+    <img class="img-circle center-block" width="128" height="128" src="@Url.Action("GetUserProfileImage", "Users", new {id = Model.Id})" />
 </div>
 
 <div class="profile-body container-fluid">
@@ -35,29 +37,63 @@
             @Html.Action("GetUserPosts", "Posts", new { name = Model.Name })
         </div>
         <div id="likes" class="tab-pane fade">
+            @Html.Action("GetUserLikedPosts", "Posts", new { name = Model.Name })
         </div>
     </div>
 </div>
 
 <script>
-    $(document).ready(function () {
-        if (location.hash !== '') $('a[href="' + location.hash + '"]').tab('show');
-        return $('a[data-toggle="tab"]').on('shown', function (e) {
-            return location.hash = $(e.target).attr('href').substr(1);
+    $(document)
+        .ready(function () {
+            if (location.hash !== '') $('a[href="' + location.hash + '"]').tab('show');
+            return $('a[data-toggle="tab"]')
+                .on('shown',
+                    function (e) {
+                        return location.hash = $(e.target).attr('href').substr(1);
+                    });
         });
-    });
 
-    $(function() {
+
+    $(function () {
         $("#profile-header")
             .css("background-image", "url(@Url.Action("GetUserHeaderImage", "Users", new {id = Model.Id}))");
 
-        @if (ViewBag.isFollowing)
+        @if (!ViewBag.IsCurrentUser)
         {
-            @:$(".user-avatar img").css("border", "3px solid green");
+            if (ViewBag.isFollowing)
+            {
+                @:$(".avatar-image img").css("border", "3px solid green");
+            }
+            else
+            {
+                @:$(".avatar-image img").css("border", "3px solid red");
+            }
         }
-        else
-        {
-            @:$(".user-avatar img").css("border", "3px solid red");
-        }
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        $("#profile-header .follow-button button")
+            .click(function () {
+                var self = this;
+                if ($(this).text() == "Unfollow") {
+                    console.log("yes");
+                    $.ajax({
+                        url: '@Url.Action("Unfollow", "Users", new { name = Model.Name})',
+                        success: function (data) {
+                            $(self).text("Follow");
+                        }
+                    });
+                } else {
+                    console.log("yes");
+                    $.ajax({
+                        url: '@Url.Action("Follow", "Users", new { name = Model.Name})',
+                        success: function (data) {
+                            $(self).text("Unfollow");
+                        }
+                    });
+                }
+            });
     });
 </script>

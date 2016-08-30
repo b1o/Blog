@@ -18,19 +18,22 @@ namespace Blog.Controllers
             var post = this.db.Posts.FirstOrDefault(p => p.Id == id);
             if (post != null)
             {
-                var model = new PostViewModel()
+                if (this.User.Identity.GetUserId() == post.AuthorId)
                 {
-                    Id = post.Id,
-                    Author = post.Author,
-                    PostedOn = post.PostedOn,
-                    Content = post.Content,
-                    IsPublic = post.isPublic,
-                    Tags = post.Tags,
-                    Description = post.Description,
-                    Title = post.Title,
-                    AuthorDisplayName = post.Author.DisplayName
-                };
-                return this.PartialView("Delete", model);
+                    var model = new PostViewModel()
+                    {
+                        Id = post.Id,
+                        Author = post.Author,
+                        PostedOn = post.PostedOn,
+                        Content = post.Content,
+                        IsPublic = post.isPublic,
+                        Tags = post.Tags,
+                        Description = post.Description,
+                        Title = post.Title,
+                        AuthorDisplayName = post.Author.DisplayName
+                    };
+                    return this.PartialView("Delete", model);
+                }
             }
 
             return this.HttpNotFound("Post not found");
@@ -73,6 +76,7 @@ namespace Blog.Controllers
                     PostedOn = DateTime.Now,
                     ScheduledOn = DateTime.Now,
                     Title = model.Title,
+                    Likes = this.db.Likes.Count(l => l.LikedPost.Id == model.Id),
                     Id = model.Id
                 };
 
@@ -91,8 +95,33 @@ namespace Blog.Controllers
             return this.PartialView("Create", model);
         }
 
+        public ActionResult GetUserLikedPosts(string name)
+        {
+            var user = this.db.Users.FirstOrDefault(u => u.DisplayName == name);
+
+            var model = user.LikesPosts.Select(l => l.LikedPost).Select(p => new PostViewModel()
+            {
+                Id = p.Id,
+                Author = p.Author,
+                Content = p.Content,
+                PostedOn = p.PostedOn,
+                Tags = p.Tags,
+                Description = p.Description,
+                Title = p.Title,
+                IsPublic = p.isPublic,
+                AuthorDisplayName = p.Author.DisplayName,
+                Likes = this.db.Likes.Count(l => l.LikedPost.Id == p.Id),
+                IsLiked = user.LikesPosts.Any(l => l.LikedPost.Id == p.Id)
+            });
+
+            return this.PartialView("_UserPostsPartial", model);
+        }
+
         public ActionResult GetUserPosts(string name)
         {
+            var currentUserId = this.User.Identity.GetUserId();
+            var currentUser = this.db.Users.FirstOrDefault(u => u.Id == currentUserId);
+
             var model = this.db.Users
             .Where(u => u.DisplayName == name)
             .Select(u => u.Posts)
@@ -108,10 +137,54 @@ namespace Blog.Controllers
                 Tags = e.Tags,
                 Description = e.Description,
                 Content = e.Content,
-                IsPublic = e.isPublic
+                Likes = this.db.Likes.Count(l => l.LikedPost.Id == e.Id),
+                IsPublic = e.isPublic,
+                IsLiked = currentUser.LikesPosts.Any(l => l.LikedPost.Id == e.Id )
             });
 
             return this.PartialView("_UserPostsPartial", model);
+        }
+
+        public ActionResult Like(int id)
+        {
+            var post = this.db.Posts.FirstOrDefault(p => p.Id == id);
+            var currentUserId = this.User.Identity.GetUserId();
+            var currentUser = this.db.Users.FirstOrDefault(u => u.Id == currentUserId);
+            var like = new Like()
+            {
+                LikedPost = post,
+                User = currentUser
+            };
+
+            if (post != null && !currentUser.LikesPosts.Any(l => l.LikedPost == like.LikedPost))
+            {
+                currentUser.LikesPosts.Add(like);
+                this.db.SaveChanges();
+            }
+
+            return this.Json(new {postLikesCount = this.db.Likes.Count(l => l.LikedPost.Id == id)}, "application/json");
+        }
+
+        public ActionResult Unlike(int id)
+        {
+            var post = this.db.Posts.FirstOrDefault(p => p.Id == id);
+            var currentUserId = this.User.Identity.GetUserId();
+            var currentUser = this.db.Users.FirstOrDefault(u => u.Id == currentUserId);
+            var like = new Like()
+            {
+                LikedPost = post,
+                User = currentUser
+            };
+
+            if (post != null && currentUser.LikesPosts.Any(l => l.LikedPost == like.LikedPost))
+            {
+                var result = currentUser.LikesPosts.FirstOrDefault(l => l.LikedPost == post);
+                this.db.Likes.Remove(result);
+                currentUser.LikesPosts.Remove(result);
+                this.db.SaveChanges();
+            }
+
+            return this.Json(new { postLikesCount = this.db.Likes.Count(l => l.LikedPost.Id == id) }, "application/json");
         }
     }
 }

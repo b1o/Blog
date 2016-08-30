@@ -17,13 +17,30 @@ namespace Blog.Controllers
         public ActionResult Show(string name)
         {
             var user = this.db.Users.FirstOrDefault(u => u.DisplayName == name);
+            var userLikes = user.LikesPosts.Select(l => l.LikedPost)
+            .Select(p => new PostViewModel()
+             {
+                 Id = p.Id,
+                 Author = p.Author,
+                 Content = p.Content,
+                 PostedOn = p.PostedOn,
+                 Tags = p.Tags,
+                 Description = p.Description,
+                 Title = p.Title,
+                 IsPublic = p.isPublic,
+                 AuthorDisplayName = p.Author.DisplayName,
+                 Likes = this.db.Likes.Count(l => l.LikedPost.Id == p.Id),
+                 IsLiked = user.LikesPosts.Any(l => l.LikedPost.Id == p.Id)
+             }).ToList();
+
             var userViewModel = new UserViewModel
             {
                 Name = user.DisplayName,
                 Followers = user.Followers,
                 Following = user.Following,
                 Posts = user.Posts,
-                Id = user.Id
+                Id = user.Id,
+                Likes = userLikes
             };
 
             var isOwner = user.Id == this.User.Identity.GetUserId();
@@ -43,6 +60,21 @@ namespace Blog.Controllers
         {
             var currentUserId = this.User.Identity.GetUserId();
             var currentUser = this.db.Users.FirstOrDefault(u => u.Id == currentUserId);
+            var userLikes = currentUser.LikesPosts.Select(l => l.LikedPost)
+            .Select(p => new PostViewModel()
+            {
+                Id = p.Id,
+                Author = p.Author,
+                Content = p.Content,
+                PostedOn = p.PostedOn,
+                Tags = p.Tags,
+                Description = p.Description,
+                Title = p.Title,
+                IsPublic = p.isPublic,
+                AuthorDisplayName = p.Author.DisplayName,
+                IsLiked = currentUser.LikesPosts.Any(l => l.LikedPost.Id == p.Id)
+            }).ToList();
+
             if (currentUser != null)
             {
                 var model = new UserViewModel()
@@ -53,7 +85,8 @@ namespace Blog.Controllers
                     Posts = currentUser.Posts,
                     Following = currentUser.Following,
                     Followers = currentUser.Followers,
-                    HeaderImage = currentUser.HeaderImage
+                    HeaderImage = currentUser.HeaderImage,
+                    Likes = userLikes
                 };
 
                 return this.View(model);
@@ -67,12 +100,28 @@ namespace Blog.Controllers
             var user = this.db.Users.FirstOrDefault(u => u.DisplayName == name);
             if (user != null)
             {
+                var userLikes = user.LikesPosts.Select(l => l.LikedPost)
+                    .Select(p => new PostViewModel()
+                    {
+                        Id = p.Id,
+                        Author = p.Author,
+                        Content = p.Content,
+                        PostedOn = p.PostedOn,
+                        Tags = p.Tags,
+                        Description = p.Description,
+                        Title = p.Title,
+                        IsPublic = p.isPublic,
+                        AuthorDisplayName = p.Author.DisplayName,
+                        IsLiked = user.LikesPosts.Any(l => l.LikedPost.Id == p.Id)
+                    }).ToList();
+
                 var userViewModel = new UserViewModel
                 {
                     Name = user.DisplayName,
                     Followers = user.Followers,
                     Posts = user.Posts,
-                    Id = user.Id
+                    Id = user.Id,
+                    Likes = userLikes
                 };
 
                 return this.PartialView("_HoverCard", userViewModel);
@@ -157,7 +206,7 @@ namespace Blog.Controllers
             return this.View(model);
         }
 
-        public ActionResult Follow(string name)
+        public void Follow(string name)
         {
             var currentUserId = this.User.Identity.GetUserId();
             var currentUser = this.db.Users.FirstOrDefault(u => u.Id == currentUserId);
@@ -169,11 +218,9 @@ namespace Blog.Controllers
                 targetUser.Followers.Add(currentUser);
                 this.db.SaveChanges();
             }
-
-            return this.RedirectToAction("Show", "Users", new {name = targetUser.DisplayName});
         }
 
-        public ActionResult Unfollow(string name)
+        public void Unfollow(string name)
         {
             var currentUserId = this.User.Identity.GetUserId();
             var currentUser = this.db.Users.FirstOrDefault(u => u.Id == currentUserId);
@@ -185,8 +232,41 @@ namespace Blog.Controllers
                 targetUser.Followers.Remove(currentUser);
                 this.db.SaveChanges();
             }
+        }
 
-            return this.RedirectToAction("Show", "Users", new { name = targetUser.DisplayName });
+        //Really Slow TODO: find a way to optimize
+        public ActionResult GetUsers(int limit, int offset)
+        {
+            var currentUserId = this.User.Identity.GetUserId();
+            var currentUser = this.db.Users.FirstOrDefault(u => u.Id == currentUserId);
+
+            var users = this.db.Users
+                .Where(u => currentUserId != u.Id)
+                .OrderBy(u => u.DisplayName)
+                .Skip(offset)
+                .Take(limit);
+
+            var model = new List<UserViewModel>();
+            foreach (var user in users)
+            {
+                var isFollowing = currentUser.Following.Contains(user);
+                model.Add(new UserViewModel()
+                {
+                    Id = user.Id,
+                    Name = user.DisplayName,
+                    ProfileImage = user.ProfileImage,
+                    Following = user.Following,
+                    Posts = user.Posts,
+                    HeaderImage = user.HeaderImage,
+                    Followers = user.Followers,
+                    IsFollowing = isFollowing,
+                    //Likes = user.Likes
+                });
+            }
+
+            this.ViewBag.Offset = model.Count + offset;
+
+            return this.PartialView("_UserListPartial", model);
         }
     }
 }

@@ -20,7 +20,11 @@ namespace Blog.Models
         [Display(Name = "Profile Image")]
         public byte[] ProfileImage { get; set; }
 
+        public bool IsFollowing { get; set; }
+
         public ICollection<Post> Posts { get; set; }
+
+        public ICollection<PostViewModel> Likes { get; set; }
 
         public ICollection<ApplicationUser> Followers { get; set; }
 

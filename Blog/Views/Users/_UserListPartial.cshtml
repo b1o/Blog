@@ -1,0 +1,10 @@
+﻿@model IEnumerable<Blog.Models.UserViewModel>
+
+
+@if (Model.Any())
+{
+    <div data-offset="@ViewBag.Offset" class="user-list">
+            @Html.DisplayFor(u => u)
+    </div>
+}
+
