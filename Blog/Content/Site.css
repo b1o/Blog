@@ -43,6 +43,74 @@ body {
     animation-timing-function: linear;
 }
 
+.inputfile, .inputHeader {
+    width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
+#uploadHeader {
+    color: white;
+    margin: 0 auto;
+    width: 98.6%;
+    height: 300px;
+    border-radius: 5px;
+    text-align: center;
+    vertical-align: middle;
+    background: rgba(0,0,0,0.6);
+    position: absolute;
+    z-index: 1;
+    right: 0;
+    font-size: 2em;
+    left: 0;
+    display: none;
+}
+
+#profile-header:hover #uploadHeader {
+    display: block;
+}
+
+#uploadHeader span {
+    position: absolute;
+    right: 0;
+    cursor: pointer;
+    left: 0;
+    text-align: center;
+    margin-top: 150px;
+}
+
+.inputfile + label {
+    font-size: 2em;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    margin-top: 0;
+    color: whitesmoke;
+    width: 128px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.6);
+    height: 128px;
+    display: none;
+    transition: all 0.5s;
+}
+
+.inputfile + label span {
+    position: absolute;
+    right: 0;
+    cursor: pointer;
+    left: 0;
+    margin-top: 45px;
+    text-align: center;
+}
+
+.avatar-image:hover label {
+    display: block;
+}
+
 .loading {
     animation-name: spin;
     animation-duration: 4000ms;
@@ -74,7 +142,10 @@ body {
 }
 
 .avatar-image {
+    z-index: 2;
     margin-top: -120px;
+    width: 128px;
+    margin: 0 auto;
 }
 
 .profile-avatar {

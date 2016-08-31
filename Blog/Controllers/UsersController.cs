@@ -162,6 +162,51 @@ namespace Blog.Controllers
          
         }
 
+        [Authorize]
+        [HttpPost]
+        public ActionResult EditProfileImage([Bind(Exclude = "ProfileImage")]UserViewModel model)
+        {
+            var currentUserId = this.User.Identity.GetUserId();
+            var currentUser = this.db.Users.FirstOrDefault(u => u.Id == currentUserId);
+
+            var image = this.Request.Files["ProfileImage"];
+            byte[] imageData = null;
+            using (BinaryReader binary = new BinaryReader(image.InputStream))
+            {
+                imageData = binary.ReadBytes(image.ContentLength);
+            }
+
+            if (imageData.Length > 0)
+            {
+                currentUser.ProfileImage = imageData;
+                this.db.SaveChanges();
+            }
+
+            return this.RedirectToAction("Profile", "Users");
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult EditHeaderImage()
+        {
+            var currentUserId = this.User.Identity.GetUserId();
+            var currentUser = this.db.Users.FirstOrDefault(u => u.Id == currentUserId);
+
+            var image = this.Request.Files["HeaderImage"];
+            byte[] imageData = null;
+            using (BinaryReader binary = new BinaryReader(image.InputStream))
+            {
+                imageData = binary.ReadBytes(image.ContentLength);
+            }
+
+            if (imageData.Length > 0)
+            {
+                currentUser.HeaderImage = imageData;
+                this.db.SaveChanges();
+            }
+            return this.RedirectToAction("Profile", "Users");
+        }
+
         // POST: /Users/Edit
         [Authorize]
         [HttpPost]
