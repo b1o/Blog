@@ -1,19 +1,29 @@
-﻿@model IEnumerable<Blog.Models.PostViewModel>
-
+﻿
 @{
     ViewBag.Title = "Dashboard";
 }
 
 <div id="posts-container" class="container-fluid center-block">
     <div class="panel-group">
-        @if (Model.Any())
-        {
-            @Html.DisplayFor(x => x);
-        }
-        else
-        {
-            <div class="col-md-4 col-sm-6 col-xs-12">No Posts</div>
-        }
+        @Html.Action("GetDashboard", "Dashboard", new {limit = 5, offset = 0})
     </div>
 
+    <button id="load-more-btn" class="btn btn-default center-block text-center">Load More</button>
 </div>
+
+<script>
+    $(document).ready(function() {
+        $("#load-more-btn")
+            .click(function() {
+                var offset = $(".posts").last().data("offset");
+                $.ajax({
+                    url: "/Dashboard/GetDashboard",
+                    data: { limit: 5, offset: offset },
+                    success: function (data) {
+                        $("[data-hasposts='false']").remove();
+                        $(".panel-group").append(data);
+                    }
+                });
+            });
+    })
+</script>

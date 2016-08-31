@@ -29,6 +29,7 @@
     <div class="panel-footer">
         Posted on: @Model.PostedOn.ToShortDateString()
         <div class="pull-right">
+            <span class="glyphicon glyphicon-refresh loading" style="display: none"></span>
             @if (Model.IsLiked)
             {
                 <span class="glyphicon glyphicon-heart glyph-button like-btn" style="color: red"></span>
@@ -53,7 +54,11 @@
                     $.ajax({
                         url: "/Posts/Like/" + @Model.Id,
                         method: "POST",
+                        beforeSend: function() {
+                            $("#post-@Model.Id .loading").show();
+                        },
                         success: function(data) {
+                            $("#post-@Model.Id .loading").hide();
                             $(self).toggleClass("glyphicon-heart-empty glyphicon-heart").css("color", "red");
                             $("#post-@Model.Id #likes-count").text(data.postLikesCount);
                         }

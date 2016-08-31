@@ -28,7 +28,7 @@
                     {
                         <li><a href="@Url.Action("Index", "Dashboard")"><span class="glyphicon glyphicon-home" style="font-size: 1.5em"></span></a></li>
                         <li><a data-toggle="modal" data-url="/Posts/Create" class="glyph-button"><span class="glyphicon glyphicon-upload" style="font-size: 1.5em"></span></a></li>
-                        <li>@Html.ActionLink(" ", "Explore", "Home", new { limit = 3, offset = 0}, new { @class = "glyph-button glyphicon glyphicon-globe", style = "font-size: 1.5em"})</li>
+                        <li>@Html.ActionLink(" ", "Explore", "Home", new {limit = 3, offset = 0}, new {@class = "glyph-button glyphicon glyphicon-globe", style = "font-size: 1.5em"})</li>
                     }
                 </ul>
                 @Html.Partial("_LoginPartial")
@@ -37,14 +37,15 @@
     </div>
 
 
-    <div class="container-fluid body-content">
-            @RenderBody()
+<div class="container-fluid body-content">
+    @Html.Partial("_Notifications")
+    @RenderBody()
 
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - FollowMe</p>
-        </footer>
-    </div>
+    <hr/>
+    <footer>
+        <p>&copy; @DateTime.Now.Year - FollowMe</p>
+    </footer>
+</div>
         
     <div class="modal fade" id="modalPopup">
         <div class="modal-dialog">

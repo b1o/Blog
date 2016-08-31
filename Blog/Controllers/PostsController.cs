@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using Blog.Data;
 using Blog.Models;
+using Blog.Extensions;
 using Microsoft.AspNet.Identity;
 
 namespace Blog.Controllers
@@ -84,11 +85,13 @@ namespace Blog.Controllers
                 this.db.SaveChanges();
                 if (model.IsPublic)
                 {
+                    this.AddNotification("Public Post Created", NotificationType.SUCCESS);
                     return this.RedirectToAction("Index", "Dashboard");
                 }
                 else
                 {
-                    return this.RedirectToAction("My", "Home");
+                    this.AddNotification("Private Post Created", NotificationType.SUCCESS);
+                    return this.RedirectToAction("Profile", "Users");
                 }
             }
 

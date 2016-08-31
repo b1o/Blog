@@ -1,0 +1,12 @@
+﻿@model IEnumerable<Blog.Models.PostViewModel>
+
+@if (Model.Any())
+{
+    <div class="posts" data-offset="@ViewBag.Offset">
+        @Html.DisplayFor(x => x)
+    </div>
+}
+else
+{
+    <div class="posts center-block" data-offset="@ViewBag.Offset" data-hasPosts="false" style="text-align: center">No More Posts</div>
+}

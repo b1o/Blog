@@ -162,14 +162,40 @@ namespace Blog.Controllers
          
         }
 
+        public void showNote(string message, string type)
+        {
+            switch (type)
+            {
+                case "error":
+                    this.AddNotification(message, NotificationType.ERROR);
+                    break;
+                case "success":
+                    this.AddNotification(message, NotificationType.SUCCESS);
+                    break;
+                case "info":
+                    this.AddNotification(message, NotificationType.INFO);
+                    break;
+                case "warning":
+                    this.AddNotification(message, NotificationType.WARNING);
+                    break;
+            }
+        }
+
         [Authorize]
         [HttpPost]
-        public ActionResult EditProfileImage([Bind(Exclude = "ProfileImage")]UserViewModel model)
+        public ActionResult EditProfileImage()
         {
             var currentUserId = this.User.Identity.GetUserId();
             var currentUser = this.db.Users.FirstOrDefault(u => u.Id == currentUserId);
 
             var image = this.Request.Files["ProfileImage"];
+
+            if (image.ContentLength > 3500 * 1024)
+            {
+                this.AddNotification("Image size should not be larger than 3.5mb", NotificationType.ERROR);
+                return this.RedirectToAction("Profile", "Users");
+            }
+
             byte[] imageData = null;
             using (BinaryReader binary = new BinaryReader(image.InputStream))
             {
@@ -180,6 +206,10 @@ namespace Blog.Controllers
             {
                 currentUser.ProfileImage = imageData;
                 this.db.SaveChanges();
+            }
+            else
+            {
+                this.AddNotification("Something went wrong", NotificationType.ERROR);
             }
 
             return this.RedirectToAction("Profile", "Users");

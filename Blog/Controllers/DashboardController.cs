@@ -13,7 +13,7 @@ namespace Blog.Controllers
     {
         //TODO: exctract the select as expression in the PostViewModel for less code duplication
         // GET: Dashboard
-        public ActionResult Index()
+        public ActionResult GetDashboard(int limit, int offset)
         {
             var currentUserId = this.User.Identity.GetUserId();
             var currentUser = this.db.Users.FirstOrDefault(u => u.Id == currentUserId);
@@ -51,9 +51,15 @@ namespace Blog.Controllers
                 IsLiked = currentUser.LikesPosts.Any(l => l.LikedPost.Id == e.Id)
             });
 
-            posts = posts.Concat(myPosts).OrderByDescending(p => p.PostedOn);
+            posts = posts.Concat(myPosts).OrderByDescending(p => p.PostedOn).Skip(offset).Take(limit);
+            this.ViewBag.Offset = posts.Count() + offset;
 
-            return this.View(posts);
+            return this.PartialView("_DashboardPostsPartial", posts);
+        }
+
+        public ActionResult Index()
+        {
+            return this.View();
         }
     }
 }
