@@ -72,8 +72,7 @@
                     });
 
 
-                $("[data-toggle='popover']")
-                    .hover(function() {
+                $(document).on('mouseover', '[data-toggle="popover"]', function() {
                         var self = this;
                         $(self).off('hover');
                         var name = $(this).data("id");
@@ -104,7 +103,7 @@
                                         });
                             }
                         });
-                    }, function() {
+                }).on("mouseout", '[data-toggle="popover"]',function() {
                         var _this = this;
                         console.log($(".popover:hover"));
                         setTimeout(function() {

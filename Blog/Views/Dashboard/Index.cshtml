@@ -8,7 +8,7 @@
         @Html.Action("GetDashboard", "Dashboard", new {limit = 5, offset = 0})
     </div>
 
-    <button id="load-more-btn" class="btn btn-default center-block text-center">Load More</button>
+    <button id="load-more-btn" class="btn btn-default center-block text-center"><span id="btn-loading" style="display: none" class="glyphicon glyphicon-refresh loading"></span>Load More</button>
 </div>
 
 <script>
@@ -25,5 +25,9 @@
                     }
                 });
             });
+    }).ajaxStart(function() {
+        $("#btn-loading").show();
+    }).ajaxStop(function() {
+        $("#btn-loading").hide();
     })
 </script>
