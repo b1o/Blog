@@ -143,9 +143,9 @@ body {
 
 .avatar-image {
     z-index: 2;
+    margin: 0 auto;
     margin-top: -120px;
     width: 128px;
-    margin: 0 auto;
 }
 
 .profile-avatar {

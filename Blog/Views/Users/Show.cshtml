@@ -8,12 +8,12 @@
     {
         <div class="follow-button pull-right">
             @if (Model.IsFollowing)
-                {
-                <button class="btn btn-info btn-sm pull-right">Unfollow</button>
+            {
+                <button class="btn btn-info pull-right">Follow</button>
             }
             else
             {
-                <button class="btn btn-info pull-right">Follow</button>
+                <button class="btn btn-info btn-sm pull-right">Unfollow</button>
             }
         </div>
     }
@@ -82,6 +82,7 @@
                     $.ajax({
                         url: '@Url.Action("Unfollow", "Users", new { name = Model.Name})',
                         success: function (data) {
+                            $(".avatar-image img").css("border", "3px solid red");
                             $(self).text("Follow");
                         }
                     });
@@ -90,6 +91,7 @@
                     $.ajax({
                         url: '@Url.Action("Follow", "Users", new { name = Model.Name})',
                         success: function (data) {
+                            $(".avatar-image img").css("border", "3px solid green");
                             $(self).text("Unfollow");
                         }
                     });
