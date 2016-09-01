@@ -100,6 +100,8 @@ namespace Blog.Controllers
 
         public ActionResult GetUserLikedPosts(string name)
         {
+            var currentUserId = this.User.Identity.GetUserId();
+            var currentUser = this.db.Users.FirstOrDefault(u => u.Id == currentUserId);
             var user = this.db.Users.FirstOrDefault(u => u.DisplayName == name);
 
             var model = user.LikesPosts.Select(l => l.LikedPost).Select(p => new PostViewModel()
@@ -114,7 +116,7 @@ namespace Blog.Controllers
                 IsPublic = p.isPublic,
                 AuthorDisplayName = p.Author.DisplayName,
                 Likes = this.db.Likes.Count(l => l.LikedPost.Id == p.Id),
-                IsLiked = user.LikesPosts.Any(l => l.LikedPost.Id == p.Id)
+                IsLiked = currentUser.LikesPosts.Any(l => l.LikedPost.Id == p.Id)
             });
 
             return this.PartialView("_UserPostsPartial", model);

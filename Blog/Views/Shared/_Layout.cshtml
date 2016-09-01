@@ -14,13 +14,29 @@
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
-            <div class="navbar-header">
+            <div class="navbar-header" style="position: absolute">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
                 @Html.ActionLink("FollowMe", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @using (Html.BeginForm("Index", "Search"))
+                {
+                    <div class="col-md-4">
+                        <div id="custom-search-input">
+                            <div class="input-group col-md-12">
+                                <input type="text" name="query" class="form-control input-sm" placeholder="Search" />
+                                <span class="input-group-btn">
+                                    <button  class="btn btn-info btn-lg" type="submit">
+                                        <i class="glyphicon glyphicon-search"></i>
+                                    </button>
+                                </span>
+                                
+                            </div>
+                        </div>
+                    </div>
+                }
             </div>
             <div class="navbar-collapse collapse pull-right">
                 <ul class="nav navbar-nav">
@@ -105,7 +121,6 @@
                         });
                 }).on("mouseout", '[data-toggle="popover"]',function() {
                         var _this = this;
-                        console.log($(".popover:hover"));
                         setTimeout(function() {
                                 if (!$(".popover:hover").length) {
                                     $(_this).popover("hide");
