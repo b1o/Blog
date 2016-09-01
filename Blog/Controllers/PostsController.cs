@@ -13,6 +13,54 @@ namespace Blog.Controllers
     [Authorize]
     public class PostsController : BaseController
     {
+        // GET: Edit
+        public ActionResult Edit(int id)
+        {
+            var post = this.db.Posts.FirstOrDefault(p => p.Id == id);
+
+            if (post != null)
+            {
+                var model = new PostViewModel()
+                {
+                    Id = post.Id,
+                    Content = post.Content,
+                    Title = post.Title,
+                    Description = post.Description,
+                    IsPublic = post.isPublic
+                };
+
+                return this.PartialView("Edit", model);
+            }
+
+            this.AddNotification("Post not found", NotificationType.ERROR);
+            return this.RedirectToAction("Index", "DashBoard");
+        }
+
+        // Post: Edit
+        [HttpPost]
+        public ActionResult Edit(PostViewModel model)
+        {
+            var post = this.db.Posts.FirstOrDefault(p => p.Id == model.Id);
+            if (this.User.Identity.IsAuthenticated)
+            {
+                if (this.ModelState.IsValid)
+                {
+                    post.Content = model.Content;
+                    post.Description = model.Description;
+                    post.Title = model.Title;
+                    model.IsPublic = model.IsPublic;
+
+                    this.db.SaveChanges();
+                    this.AddNotification($"Post #{post.Id} Edited", NotificationType.SUCCESS);
+                    return this.RedirectToAction("Profile", "Users");
+                }
+
+                return this.PartialView("Edit", model);
+            }
+
+            return this.RedirectToAction("Login", "Account");
+        }
+
         // GET: Delete
         public ActionResult Delete(int id)
         {

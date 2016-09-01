@@ -373,6 +373,7 @@
     <Content Include="Views\Shared\_Notifications.cshtml" />
     <Content Include="Views\Dashboard\_DashboardPostsPartial.cshtml" />
     <Content Include="Views\Search\Index.cshtml" />
+    <Content Include="Views\Posts\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
