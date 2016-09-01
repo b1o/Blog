@@ -8,6 +8,7 @@
     <div id="user-@Model.Id" class="user-box col-md-12">
         <div class="user-box-header">
             <div class="user-box-controls">
+                @Html.ActionLink(Model.Name, "Show", "Users", new { name = Model.Name }, new { @class = "" })
                 @if (Model.IsFollowing)
                 {
                     <button class="btn btn-info btn-sm pull-right">Unfollow</button>
@@ -16,7 +17,6 @@
                 {
                     <button class="btn btn-info pull-right">Follow</button>
                 }
-                @Html.ActionLink(Model.Name, "Show", "Users", new { name = Model.Name }, new { @class = "panel-heading center-block" })
             </div>
             <img class="img-circle center-block" width="128" height="128" src="@Url.Action("GetUserProfileImage", "Users", new {id = Model.Id})" />
         </div>
@@ -24,13 +24,13 @@
             <thead>
                 <tr>
                     <th>Posts</th>
-                    <th class="text-right">0</th>
+                    <th class="text-right">Likes</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td class="text-center"><a href="@Url.Action("Show", "Users", new {name = Model.Name})#posts">@Model.Posts.Count</a></td>
-                    <td class="text-center"><a href="@Url.Action("Show", "Users", new {name = Model.Name})#likes">Likes</a></td>
+                    <td class="text-center"><a href="@Url.Action("Show", "Users", new {name = Model.Name})#likes">@Model.Likes.Count</a></td>
                 </tr>
             </tbody>
         </table>

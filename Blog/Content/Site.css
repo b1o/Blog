@@ -255,8 +255,14 @@ textarea {
     box-shadow: 1px 1px 3px black;
 }
 
-.body-content {
+.user-box-controls {
+    background: rgba(0, 0, 0, 0.5);
+    height: 31px;
+}
+
+.user-box-controls a {
     padding: 10px;
+    line-height: 32px
 }
 
 body::-webkit-scrollbar-track {

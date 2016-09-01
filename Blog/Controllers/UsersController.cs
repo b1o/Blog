@@ -162,25 +162,6 @@ namespace Blog.Controllers
          
         }
 
-        public void showNote(string message, string type)
-        {
-            switch (type)
-            {
-                case "error":
-                    this.AddNotification(message, NotificationType.ERROR);
-                    break;
-                case "success":
-                    this.AddNotification(message, NotificationType.SUCCESS);
-                    break;
-                case "info":
-                    this.AddNotification(message, NotificationType.INFO);
-                    break;
-                case "warning":
-                    this.AddNotification(message, NotificationType.WARNING);
-                    break;
-            }
-        }
-
         [Authorize]
         [HttpPost]
         public ActionResult EditProfileImage()
@@ -238,48 +219,48 @@ namespace Blog.Controllers
         }
 
         // POST: /Users/Edit
-        [Authorize]
-        [HttpPost]
-        public ActionResult Edit([Bind(Exclude = "ProfileImage, HeaderImage")]UserEditModel model)
-        {
-            if (ModelState.IsValid && Request.IsAuthenticated)
-            {
-                var user = this.db.Users
-                    .FirstOrDefault(u => u.Id == model.Id);
-                user.DisplayName = model.DisplayName;
+        //[Authorize]
+        //[HttpPost]
+        //public ActionResult Edit([Bind(Exclude = "ProfileImage, HeaderImage")]UserEditModel model)
+        //{
+        //    if (ModelState.IsValid && Request.IsAuthenticated)
+        //    {
+        //        var user = this.db.Users
+        //            .FirstOrDefault(u => u.Id == model.Id);
+        //        user.DisplayName = model.DisplayName;
 
                 
-                if (Request.Files.Count > 0)
-                {
-                    byte[] profileImgData = null;
-                    byte[] headerImgData = null;
+        //        if (Request.Files.Count > 0)
+        //        {
+        //            byte[] profileImgData = null;
+        //            byte[] headerImgData = null;
 
-                    HttpPostedFileBase profileImage = Request.Files["ProfileImage"];
-                    HttpPostedFileBase headerImage = Request.Files["HeaderImage"];
+        //            HttpPostedFileBase profileImage = Request.Files["ProfileImage"];
+        //            HttpPostedFileBase headerImage = Request.Files["HeaderImage"];
 
-                    using (BinaryReader binary = new BinaryReader(profileImage.InputStream), binary2 = new BinaryReader(headerImage.InputStream))
-                    {
-                        profileImgData = binary.ReadBytes(profileImage.ContentLength);
-                        headerImgData = binary2.ReadBytes(headerImage.ContentLength);
-                    }
+        //            using (BinaryReader binary = new BinaryReader(profileImage.InputStream), binary2 = new BinaryReader(headerImage.InputStream))
+        //            {
+        //                profileImgData = binary.ReadBytes(profileImage.ContentLength);
+        //                headerImgData = binary2.ReadBytes(headerImage.ContentLength);
+        //            }
 
-                    if (headerImgData.Length > 0)
-                    {
-                        user.HeaderImage = headerImgData;
-                    }
+        //            if (headerImgData.Length > 0)
+        //            {
+        //                user.HeaderImage = headerImgData;
+        //            }
 
-                    if (profileImgData.Length > 0)
-                    {
-                        user.ProfileImage = profileImgData;
-                    }
-                }
+        //            if (profileImgData.Length > 0)
+        //            {
+        //                user.ProfileImage = profileImgData;
+        //            }
+        //        }
 
                 
-                this.db.SaveChanges();
-                return this.RedirectToAction("Profile", "Users");
-            }
-            return this.View(model);
-        }
+        //        this.db.SaveChanges();
+        //        return this.RedirectToAction("Profile", "Users");
+        //    }
+        //    return this.View(model);
+        //}
 
         public void Follow(string name)
         {
@@ -325,6 +306,19 @@ namespace Blog.Controllers
             foreach (var user in users)
             {
                 var isFollowing = currentUser.Following.Contains(user);
+                var userLikes = user.LikesPosts.Select(l => l.LikedPost).Select(p => new PostViewModel()
+                {
+                    Id = p.Id,
+                    Author = p.Author,
+                    Content = p.Content,
+                    PostedOn = p.PostedOn,
+                    Tags = p.Tags,
+                    Description = p.Description,
+                    Title = p.Title,
+                    IsPublic = p.isPublic,
+                    AuthorDisplayName = p.Author.DisplayName,
+                    IsLiked = user.LikesPosts.Any(l => l.LikedPost.Id == p.Id)
+                }).ToList();
                 model.Add(new UserViewModel()
                 {
                     Id = user.Id,
@@ -335,7 +329,7 @@ namespace Blog.Controllers
                     HeaderImage = user.HeaderImage,
                     Followers = user.Followers,
                     IsFollowing = isFollowing,
-                    //Likes = user.Likes
+                    Likes = userLikes
                 });
             }
 
