@@ -21,21 +21,24 @@
                     <span class="icon-bar"></span>
                 </button>
                 @Html.ActionLink("FollowMe", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-                @using (Html.BeginForm("Index", "Search"))
+                @if (Request.IsAuthenticated)
                 {
-                    <div class="col-md-4">
-                        <div id="custom-search-input">
-                            <div class="input-group col-md-12">
-                                <input type="text" name="query" class="form-control input-sm" placeholder="Search" />
-                                <span class="input-group-btn">
-                                    <button  class="btn btn-info btn-lg" type="submit">
-                                        <i class="glyphicon glyphicon-search"></i>
-                                    </button>
-                                </span>
-                                
+                    using (Html.BeginForm("Index", "Search"))
+                    {
+                        <div class="col-md-4">
+                            <div id="custom-search-input">
+                                <div class="input-group col-md-12">
+                                    <input type="text" name="query" class="form-control input-sm" placeholder="Search" />
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-info btn-lg" type="submit">
+                                            <i class="glyphicon glyphicon-search"></i>
+                                        </button>
+                                    </span>
+
+                                </div>
                             </div>
                         </div>
-                    </div>
+                     }
                 }
             </div>
             <div class="navbar-collapse collapse pull-right">
@@ -74,20 +77,19 @@
 
     <script>
         $(document)
-            .ready(function () {
-                $("[data-toggle='modal']")
-                    .click(function() {
-                        $.ajax({
-                            url: $(this).data("url"),
-                            success: function(data) {
-                                $(".modal-dialog").html(data);
-                                $("#modalPopup").modal("show");
-                                $.validator.unobtrusive.parse(".modal-dialog");
-                            }
-                        });
+            .on('click',
+                "[data-toggle='modal']",
+                function() {
+                    $.ajax({
+                        url: $(this).data("url"),
+                        success: function(data) {
+                            $(".modal-dialog").html(data);
+                            $("#modalPopup").modal("show");
+                            $.validator.unobtrusive.parse(".modal-dialog");
+                        }
                     });
-
-
+                });
+         
                 $(document).on('mouseover', '[data-toggle="popover"]', function() {
                         var self = this;
                         $(self).off('hover');
@@ -128,11 +130,6 @@
                             },
                             300);
                     });
-            });
-
-        
-
-
     </script>
 
 </body>

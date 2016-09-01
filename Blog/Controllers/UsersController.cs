@@ -38,7 +38,7 @@ namespace Blog.Controllers
                 Name = user.DisplayName,
                 Followers = user.Followers,
                 Following = user.Following,
-                Posts = user.Posts,
+                Posts = user.Posts.Where(p => p.isPublic).ToList(),
                 Id = user.Id,
                 Likes = userLikes
             };
